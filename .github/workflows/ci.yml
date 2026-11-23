@@ -1,0 +1,27 @@
+name: Run Postman Tests
+
+on:
+  pull_request:
+    branches: [master]
+
+jobs:
+  run-tests:
+    name: 'Postman Tests'
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile --ignore-engines
+
+      - name: Postman Tests
+        continue-on-error: false
+        env:
+          CURRENTS_RECORD_KEY: ${{ secrets.CURRENTS_RECORD_KEY }}
+        run: npx newman run ./collection.json -r cli,junit --reporter-junit-export ./results.xml && npx currents convert --input-format=junit --input-file=./results.xml --framework=postman && npx currents upload --key=$CURRENTS_RECORD_KEY --project-id=FMkvLJ
