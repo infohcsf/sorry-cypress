@@ -71,6 +71,10 @@ credentials
 /data
 example/data
 
+# Postman / Currents test artifacts
+results.xml
+.currents/
+
 # OS files
 .DS_Store
 .yarn
